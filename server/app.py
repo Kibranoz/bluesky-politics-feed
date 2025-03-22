@@ -1,6 +1,10 @@
 import sys
 import signal
 import threading
+import spacy
+import processing.feedparsing
+import processing.textParsing
+import processing.wordAnalytics
 
 from server import config
 from server import data_stream

@@ -2,6 +2,9 @@ from collections import defaultdict
 
 from atproto import models
 
+from processing.constants import nlp, actualitySubjects
+from processing.textParsing import breakdownSentenceIntoCategories
+from processing.wordAnalytics import skeetIsIncluded
 from server.logger import logger
 from server.database import db, Post
 
@@ -21,16 +24,15 @@ def operations_callback(ops: defaultdict) -> None:
         # print all texts just as demo that data stream works
         post_with_images = isinstance(record.embed, models.AppBskyEmbedImages.Main)
         inlined_text = record.text.replace('\n', ' ')
-        logger.debug(
-            f'NEW POST '
-            f'[CREATED_AT={record.created_at}]'
-            f'[AUTHOR={author}]'
-            f'[WITH_IMAGE={post_with_images}]'
-            f': {inlined_text}'
-        )
+        #logger.debug(
+         #  f'[CREATED_AT={record.created_at}]'
+          #  f'[AUTHOR={author}]'
+           # f'[WITH_IMAGE={post_with_images}]'
+           #
+           #
 
-        # only python-related posts
-        if 'python' in record.text.lower():
+        if record.langs == ["fr"] and skeetIsIncluded(record.text.lower().split(" "), actualitySubjects, nlp):
+            print(record.text)
             reply_root = reply_parent = None
             if record.reply:
                 reply_root = record.reply.root.uri
@@ -48,10 +50,10 @@ def operations_callback(ops: defaultdict) -> None:
     if posts_to_delete:
         post_uris_to_delete = [post['uri'] for post in posts_to_delete]
         Post.delete().where(Post.uri.in_(post_uris_to_delete))
-        logger.debug(f'Deleted from feed: {len(post_uris_to_delete)}')
+        #logger.debug(f'Deleted from feed: {len(post_uris_to_delete)}')
 
     if posts_to_create:
         with db.atomic():
             for post_dict in posts_to_create:
                 Post.create(**post_dict)
-        logger.debug(f'Added to feed: {len(posts_to_create)}')
+        #logger.debug(f'Added to feed: {len(posts_to_create)}')
