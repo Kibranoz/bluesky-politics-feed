@@ -13,7 +13,7 @@ def makeAnalyticMatrix(wordList1, wordList2, nlp):
         else:
             matrix = np.array(vec1)
     return matrix
-
+# Compare a one word list to a list of actuality subject.
 def wordIsIncluded(wordList1, wordList2, nlp):
     analyticMatrix = makeAnalyticMatrix(wordList1, wordList2, nlp)
     if isinstance(analyticMatrix, np.ndarray):
@@ -25,19 +25,6 @@ def wordIsIncluded(wordList1, wordList2, nlp):
 
 
 def skeetIsIncluded(wordList1, wordList2, nlp):
-    """
-    analyticMatrix = makeAnalyticMatrix(wordList1, wordList2, nlp)
-    aboveThreshold = True
-    if not (isinstance(analyticMatrix, np.ndarray)):
-        return False
-
-    analyticVector = analyticMatrix.flatten()
-    sortedSimilarity = np.flip(np.sort(analyticVector))[0:min(len(analyticVector), 2)]
-    for value in sortedSimilarity:
-        if value <= 0.7:
-            aboveThreshold = False
-    return aboveThreshold
-    """
     excludedWords = ["lundi", "mardi",
      "année", "jour", "noël", "matin", "bitcoin", "trade", "ETFs"]
 
