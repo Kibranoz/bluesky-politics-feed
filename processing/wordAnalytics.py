@@ -1,5 +1,4 @@
 import numpy as np
-import math
 def makeAnalyticMatrix(wordList1, wordList2, nlp):
     matrix = None
     for word1 in wordList1:
